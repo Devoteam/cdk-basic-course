@@ -1,0 +1,327 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Vehicle-API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/all-vehicles/v1": {
+      "options": {
+        "summary": "CORS",
+        "x-amazon-apigateway-integration": {
+          "type": "mock",
+          "requestTemplates": {
+            "application/json": "{\"statusCode\" : 200}\n"
+          },
+          "responses": {
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                "method.response.header.Access-Control-Allow-Methods": "'*'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              },
+              "responseTemplates": {
+                "application/json": "{}\n"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response for CORS",
+            "headers": {
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Find all Vehicles",
+        "x-amazon-apigateway-integration": {
+          "uri": "{uri}",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Vehicle"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vehicle/v1/{id}": {
+      "get": {
+        "summary": "Find Vehicle by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "in": "path"
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "uri": "{uri}",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Vehicle by ID",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VehicleUpdateRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "in": "path"
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "uri": "{uri}",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST"
+          },
+          "404": {
+            "description": "NOT FOUND"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Vehicle by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "in": "path"
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "uri": "{uri}",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Operation"
+          }
+        }
+      }
+    },
+    "/vehicle/v1": {
+      "options": {
+        "summary": "CORS",
+        "x-amazon-apigateway-integration": {
+          "type": "mock",
+          "requestTemplates": {
+            "application/json": "{\"statusCode\" : 200}\n"
+          },
+          "responses": {
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                "method.response.header.Access-Control-Allow-Methods": "'*'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              },
+              "responseTemplates": {
+                "application/json": "{}\n"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response for CORS",
+            "headers": {
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Vehicle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VehicleCreateRequest"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "uri": "{uri}",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Vendor": {
+        "type": "string",
+        "enum": [
+          "Mercedes",
+          "Porsche",
+          "Audi"
+        ]
+      },
+      "VehicleCreateRequest": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "vendor": {
+            "$ref": "#/components/schemas/Vendor"
+          }
+        }
+      },
+      "VehicleUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "vendor": {
+            "$ref": "#/components/schemas/Vendor"
+          }
+        }
+      },
+      "Vehicle": {
+        "type": "object",
+        "properties": {
+          "vendor": {
+            "$ref": "#/components/schemas/Vendor"
+          },
+          "model": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    }
+  }
+}

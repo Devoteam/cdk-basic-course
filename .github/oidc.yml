@@ -1,0 +1,54 @@
+# i.e. aws cloudformation create-stack --stack-name oidc --template-body file://oidc.yml --parameters ParameterKey=GitHubORG,ParameterValue=Devoteam ParameterKey=RepositoryName,ParameterValue=vehicle-service --capabilities CAPABILITY_NAMED_IAM
+
+Parameters:
+  GitHubORG:
+    Type: String
+  RepositoryName:
+    Type: String
+  OIDCProviderArn:
+    Default: ""
+    Type: String
+  OIDCAudience:
+    Default: "sts.amazonaws.com"
+    Type: String
+
+Conditions:
+  OIDCProviderCondition: !Equals
+    - !Ref OIDCProviderArn
+    - ""
+
+Resources:
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: github-oidc-role
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AdministratorAccess"
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !If
+                - OIDCProviderCondition
+                - !Ref GithubOIDC
+                - !Ref OIDCProviderArn
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: !Ref OIDCAudience
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubORG}/${RepositoryName}:*
+
+  GithubOIDC:
+    Type: AWS::IAM::OIDCProvider
+    Condition: OIDCProviderCondition
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ThumbprintList:
+        - ffffffffffffffffffffffffffffffffffffffff
+      ClientIdList:
+        - sts.amazonaws.com
+
+Outputs:
+  Role:
+    Value: !GetAtt Role.Arn

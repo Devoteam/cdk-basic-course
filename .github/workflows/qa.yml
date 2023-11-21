@@ -1,0 +1,15 @@
+# TODO
+
+# name: cicd-qa
+
+# on:
+#   push:
+#     branches-ignore:
+#       - main
+
+# permissions:
+#   id-token: write
+#   contents: write
+
+# jobs:
+#   ...

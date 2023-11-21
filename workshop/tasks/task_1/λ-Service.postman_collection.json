@@ -1,0 +1,48 @@
+{
+  "info": {
+    "_postman_id": "f41330fb-fa95-4bba-ada2-cf9947a4ebb3",
+    "name": "Task #1: λ-Service",
+    "description": "This is Postman-Collection to call Vehicle-API directly via **λ**\\-Service. What needs to be passed from your Deployment is the **λ-**Invoke-URI. Please extract it from your AWS Console. No Authentication/Authorization required here.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29534552"
+  },
+  "item": [
+    {
+      "name": "https://{your-uuid}.lambda-url.eu-west-1.on.aws/all-vehicles/v1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{your-uuid}.lambda-url.eu-west-1.on.aws/all-vehicles/v1",
+          "protocol": "https",
+          "host": ["{your-uuid}", "lambda-url", "eu-west-1", "on", "aws"],
+          "path": ["all-vehicles", "v1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://{your-uuid}.lambda-url.eu-west-1.on.aws/vehicle/v1",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vendor\": \"Porsche\",\n  \"model\": \"911\",\n  \"image\": \"https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9yc2NoZSUyMDkxMXxlbnwwfDB8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{your-uuid}.lambda-url.eu-west-1.on.aws/vehicle/v1",
+          "protocol": "https",
+          "host": ["{your-uuid}", "lambda-url", "eu-west-1", "on", "aws"],
+          "path": ["vehicle", "v1"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

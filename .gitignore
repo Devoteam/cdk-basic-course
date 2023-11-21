@@ -1,0 +1,13 @@
+cdk.out/
+
+**/node_modules/
+
+.terraform.lock.hcl
+.terraform/
+
+__pycache__
+
+build/
+.venv/
+
+*.zip

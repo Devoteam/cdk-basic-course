@@ -1,0 +1,17 @@
+# TODO
+
+# name: cicd-prod
+
+# on:
+#   pull_request:
+#   push:
+#     branches:
+#       - main
+
+# permissions:
+#   pull-requests: write
+#   id-token:      write
+#   contents:      write
+
+# jobs:
+#   ...
