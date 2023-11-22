@@ -10,8 +10,10 @@ terraform {
 provider "aws" {
   region = "eu-west-1"
   default_tags {
-   tags = {
-     env = "qa"
-   }
+    tags = {
+      key1 = "val1"
+      key2 = "val2"
+      # ...
+    }
  }
 }

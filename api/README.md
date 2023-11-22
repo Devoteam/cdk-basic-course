@@ -33,7 +33,7 @@ The API Gateway itself is deployed based on our OpenAPI-Specification.
 
 A WAF (Web Application Firewall) could be defined with:
 - Custom Rule-Sets
-- AWS Rule-Sets
+- AWS    Rule-Sets
 
 #### λ-Service
 

@@ -210,66 +210,47 @@ resource "aws_s3_bucket" "website" {
   bucket = "vehicle-app-36fd602d-8dd4-481f-9766-2bb6caa86526"
 }
 
-resource "aws_s3_bucket_website_configuration" "website_configuration" {
-  bucket = aws_s3_bucket.website.id
-  index_document { suffix = "index.html" }
-}
+resource "aws_cloudfront_origin_access_identity" "oai" {}
 
-data "aws_iam_policy_document" "oac_policy" {
+data "aws_iam_policy_document" "oai_policy" {
   statement {
-    principals {
-      type        = "Service"
-      identifiers = ["cloudfront.amazonaws.com"]
-    }
     actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.website.arn}/*"]
-    condition {
-      values = [
-        "${aws_cloudfront_distribution.cdn.arn}"
-      ]
-      variable = "AWS:SourceArn"
-      test     = "StringEquals"#
+
+    principals {
+      identifiers = [aws_cloudfront_origin_access_identity.oai.iam_arn]
+      type        = "AWS"
     }
   }
 }
 
 resource "aws_s3_bucket_policy" "website_policy" {
-  policy = data.aws_iam_policy_document.oac_policy.json
+  policy = data.aws_iam_policy_document.oai_policy.json
   bucket = aws_s3_bucket.website.id
-}
-
-resource "aws_cloudfront_origin_access_control" "oac" {
-  name                              = "example"
-  description                       = "example"
-  origin_access_control_origin_type = "s3"
-  signing_behavior                  = "always"
-  signing_protocol                  = "sigv4"#
-}
-
-resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
-  name = "security-headers-policy"
-  security_headers_config {
-    content_security_policy {
-      content_security_policy = "default-src 'none'; img-src images.unsplash.com; font-src fonts.gstatic.com; style-src 'unsafe-inline' fonts.googleapis.com; script-src 'self'; connect-src 5j9wr32l57.execute-api.eu-west-1.amazonaws.com"
-      override = true
-    }
-  }
 }
 
 resource "aws_cloudfront_distribution" "cdn" {
   origin {
-    domain_name              = aws_s3_bucket.website.bucket_regional_domain_name
-    origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
-    origin_id                = "_s3_origin"
+    domain_name = aws_s3_bucket.website.bucket_regional_domain_name
+    origin_id   = "_s3_origin"
+
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
+    }
   }
 
+  default_root_object = "index.html"
+
   default_cache_behavior {
-    response_headers_policy_id = aws_cloudfront_response_headers_policy.security_headers_policy.id
-    viewer_protocol_policy     = "https-only"
-    target_origin_id           = "_s3_origin"
-    cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6"
-    allowed_methods            = ["GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "DELETE"]
-    cached_methods             = ["GET", "HEAD", "OPTIONS"]
+    viewer_protocol_policy = "https-only"
+    target_origin_id       = "_s3_origin"
+    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "DELETE"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
+  }
+
+  viewer_certificate {
+    cloudfront_default_certificate = true
   }
 
   restrictions {
@@ -279,10 +260,5 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
 
-  viewer_certificate {
-    cloudfront_default_certificate = true
-  }
-
-  default_root_object = "index.html"
-  enabled             = true
+  enabled = true
 }

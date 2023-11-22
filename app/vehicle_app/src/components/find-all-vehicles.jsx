@@ -18,7 +18,7 @@ import { AssistWalker, Favorite, MoreVert, Share } from "@mui/icons-material";
 import useSWR from "swr";
 
 const VEHICLE_API =
-  "https://{API-GW-LINK}.execute-api.{AWS REGION}.amazonaws.com/prod/all-vehicles/v1";
+  "https://4s3szcx4sg.execute-api.eu-west-1.amazonaws.com/default/all-vehicles/v1";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
